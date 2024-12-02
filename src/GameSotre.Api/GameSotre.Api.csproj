@@ -1,3 +1,4 @@
+<!-- use default asp.net api dependencies -->
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
