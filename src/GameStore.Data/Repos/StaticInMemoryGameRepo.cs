@@ -6,9 +6,9 @@ internal class StaticInMemoryGameRepo : IGameRepo
 {
 	private static readonly List<Game> games = new List<Game>()
 	{
-		new Game(1, "Street Fighter II", "Fighting", 19.99m, new DateOnly(1992, 7, 15)),
-		new Game(2, "Final Fantasy XIV", "Role playing", 59.99m, new DateOnly(2010, 9, 30)),
-		new Game(3, "FIFA 23", "Sports", 69.99m, new DateOnly(2022, 9, 27)),
+		//new Game {1, "Street Fighter II", "Fighting", 19.99m, new DateOnly(1992, 7, 15)},
+		//new Game {2, "Final Fantasy XIV", "Role playing", 59.99m, new DateOnly(2010, 9, 30)},
+		//new Game {3, "FIFA 23", "Sports", 69.99m, new DateOnly(2022, 9, 27) },
 	};
 
 
