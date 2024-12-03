@@ -1,0 +1,39 @@
+
+GET http://localhost:5012/games
+Accept: application/json
+
+
+###
+GET http://localhost:5012/games/1
+Accept: application/json
+
+
+###
+POST http://localhost:5012/games
+Content-Type: application/json
+
+{
+    "name": "Minecraft",
+	"genre": "Kids and Family",
+	"price": 19.99,
+	"releaseDate": "2011-11-18"
+}
+
+
+###
+PUT http://localhost:5012/games/1
+Content-Type: application/json
+
+{
+    "id": 1,
+    "name": "Street Fighter II",
+    "genre": "Fighting",
+    "price": 29.99,
+    "releaseDate": "1992-07-15"
+}
+
+
+###
+DELETE http://localhost:5012/games/4
+Accept: application/json
+
