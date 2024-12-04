@@ -1,6 +1,7 @@
-﻿using GameStore.Data.Models;
+﻿using GameStore.Data;
+using GameStore.Data.Models;
 
-namespace GameStore.Data.Services.GenreService;
+namespace GameStore.Services.GenreService;
 
 public class EfSqliteGenreService : IGenreService
 {

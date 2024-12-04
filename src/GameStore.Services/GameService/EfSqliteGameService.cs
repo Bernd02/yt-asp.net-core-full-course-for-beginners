@@ -1,7 +1,8 @@
-﻿using GameStore.Data.Models;
+﻿using GameStore.Data;
+using GameStore.Data.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace GameStore.Data.Services.GameService;
+namespace GameStore.Services.GameService;
 
 public class EfSqliteGameService : IGameService
 {

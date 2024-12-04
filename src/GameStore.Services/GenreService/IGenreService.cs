@@ -1,6 +1,6 @@
 ﻿using GameStore.Data.Models;
 
-namespace GameStore.Data.Services.GenreService;
+namespace GameStore.Services.GenreService;
 
 public interface IGenreService
 {

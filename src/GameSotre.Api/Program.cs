@@ -1,8 +1,8 @@
 using GameSotre.Api.Endpoints;
 using GameSotre.Api.Extensions;
 using GameStore.Data;
-using GameStore.Data.Services.GameService;
-using GameStore.Data.Services.GenreService;
+using GameStore.Services.GameService;
+using GameStore.Services.GenreService;
 
 
 var builder = WebApplication.CreateBuilder(args);

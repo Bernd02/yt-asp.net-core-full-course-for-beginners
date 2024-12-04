@@ -1,6 +1,6 @@
 ﻿using GameSotre.Api.Dtos;
 using GameSotre.Api.Extensions;
-using GameStore.Data.Services.GameService;
+using GameStore.Services.GameService;
 using Microsoft.AspNetCore.Mvc;
 
 namespace GameSotre.Api.Endpoints;
