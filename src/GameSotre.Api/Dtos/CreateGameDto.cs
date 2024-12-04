@@ -2,6 +2,6 @@
 
 public record CreateGameDto(
 	string Name,
-	string Genre,
+	int GenreId,
 	decimal Price,
 	DateOnly ReleaseDate);

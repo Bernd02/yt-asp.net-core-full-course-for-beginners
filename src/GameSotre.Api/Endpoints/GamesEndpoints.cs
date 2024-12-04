@@ -1,4 +1,7 @@
 ﻿using GameSotre.Api.Dtos;
+using GameSotre.Api.Extensions;
+using GameStore.Data.Services.GameService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace GameSotre.Api.Endpoints;
 
@@ -7,62 +10,57 @@ public static class GamesEndpoints
 	public const string ENDPOINT_GET_GAME = "GetGame";
 
 
-	private static readonly List<GameDto> games = new List<GameDto>()
-	{
-		new GameDto(1, "Street Fighter II", "Fighting", 19.99m, new DateOnly(1992, 7, 15)),
-		new GameDto(2, "Final Fantasy XIV", "Role playing", 59.99m, new DateOnly(2010, 9, 30)),
-		new GameDto(3, "FIFA 23", "Sports", 69.99m, new DateOnly(2022, 9, 27)),
-	};
-
-
-	public static WebApplication MapGamesEndpoints(this WebApplication app)
+	public static void MapGamesEndpoints(this WebApplication app)
 	{
 		var gamesGroup = app.MapGroup("games");
 
-
+		// --------------------------------------------------
 		// GET /games
-		gamesGroup.MapGet("/", () => games);
-
-
-		// GET /games/1
-		gamesGroup.MapGet("/{id}", (int id) =>
+		gamesGroup.MapGet("/", (IGameService gameService) =>
 		{
-			var game = games.Find(game => game.Id == id);
+			return Results.Ok(gameService
+				.Getall()
+				.Select(game => game.ToGameSummaryDto()));
+		});
 
+		// --------------------------------------------------
+		// GET /games/1
+		gamesGroup.MapGet("/{id}", (int id, IGameService gameService) =>
+		{
+			var game = gameService.GetById(id);
 			if (null == game)
 			{
 				return Results.NotFound();
 			}
 
-			return Results.Ok(game);
-
-			// .WithName defines a name for the endpoint
+			return Results.Ok(game.ToGameDetailsDto());
 		})
+		// .WithName defines a name for the endpoint
 		.WithName(ENDPOINT_GET_GAME);
 
-
+		// --------------------------------------------------
 		// POST /games
-		gamesGroup.MapPost("/", (CreateGameDto newGame) =>
+		gamesGroup.MapPost("/", (CreateGameDto createGameDto, IGameService gameService) =>
 		{
-			var game = new GameDto(
-				games.Select(game => game.Id).Max() + 1,
-				newGame.Name,
-				newGame.Genre,
-				newGame.Price,
-				newGame.ReleaseDate);
+			var game = createGameDto.ToGame();
 
-			games.Add(game);
+			gameService.Upsert(game);
 
-			return Results.CreatedAtRoute(ENDPOINT_GET_GAME, new { id = game.Id }, game);
+			// get fresh load of game inculding genre-data
+			game = gameService.GetById(game.Id)!;
+
+			return Results.CreatedAtRoute(
+				ENDPOINT_GET_GAME,
+				new { id = game.Id },
+				game.ToGameSummaryDto());
 		});
 
-
+		// --------------------------------------------------
 		// PUT /games/1
-		gamesGroup.MapPut("/{id}", (int id, UpdateGameDto gameData) =>
+		gamesGroup.MapPut("/{id}", (int id, UpdateGameDto updateGameDto, IGameService gameService) =>
 		{
-			var game = games.Find(game => game.Id == id);
-
-			if (null == game)
+			var existingGame = gameService.GetById(id);
+			if (null == existingGame)
 			{
 				// tutor prefers to not do and "upsert" but rather return notFound
 				// becuase dB with autoIncrementing ids create confusion when adding a new object
@@ -70,27 +68,36 @@ public static class GamesEndpoints
 				return Results.NotFound();
 			}
 
-			var index = games.IndexOf(game);
-			games[index] = game with
-			{
-				Name = gameData.Name,
-				Genre = gameData.Genre,
-				Price = gameData.Price,
-				ReleaseDate = gameData.ReleaseDate,
-			};
+			var updatedGame = updateGameDto.ToGame(id);
+
+			gameService.Upsert(updatedGame);
 
 			return Results.NoContent();
 		});
 
-
+		// --------------------------------------------------
 		// DELETE /games/1
-		gamesGroup.MapDelete("/{id}", (int id) =>
+		gamesGroup.MapDelete("/{id}", (int id, IGameService gameService) =>
 		{
-			games.RemoveAll(game => game.Id == id);
+			gameService.Delete(id);
+
 			return Results.NoContent();
 		});
 
 
-		return app;
+		// --------------------------------------------------
+		// DELETE /games?ids=1,2,3
+		gamesGroup.MapDelete("/", ([FromQuery(Name = nameof(ids))] string ids, IGameService gameService) =>
+		{
+			var idsList = ids.Split(",")
+				.Select(id => int.TryParse(id, out var parsedId) ? parsedId : (int?)null)
+				.Where(parsedId => parsedId.HasValue)
+				.Cast<int>()
+				.ToList();
+
+			gameService.DelteMany(idsList);
+
+			return Results.NoContent();
+		});
 	}
 }
