@@ -1,4 +1,4 @@
-﻿using GameSotre.Api.Dtos;
+﻿using GameSotre.Api.Dtos.Game;
 using GameStore.Data.Models;
 
 namespace GameSotre.Api.Extensions;

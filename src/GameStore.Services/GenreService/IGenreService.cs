@@ -4,5 +4,6 @@ namespace GameStore.Services.GenreService;
 
 public interface IGenreService
 {
-	Genre? GetById(int id);
+	Task<Genre?> GetByIdAsync(int id);
+	Task<List<Genre>> GetAllAsync();
 }

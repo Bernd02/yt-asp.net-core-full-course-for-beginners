@@ -1,6 +1,6 @@
-﻿namespace GameSotre.Api.Dtos;
+﻿namespace GameSotre.Api.Dtos.Game;
 
-public record CreateGameDto(
+public record UpdateGameDto(
 	string Name,
 	int GenreId,
 	decimal Price,

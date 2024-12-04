@@ -4,9 +4,9 @@ namespace GameStore.Services.GameService;
 
 public interface IGameService
 {
-	List<Game> Getall();
-	Game? GetById(int id);
-	void Upsert(Game game);
-	bool Delete(int id);
-	void DelteMany(List<int> ids);
+	Task<List<Game>> GetallAsync();
+	Task<Game?> GetByIdAsync(int id);
+	Task UpsertAsync(Game game);
+	Task<bool> DeleteAsync(int id);
+	Task DelteManyAsync(List<int> ids);
 }

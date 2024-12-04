@@ -1,4 +1,4 @@
-﻿namespace GameSotre.Api.Dtos;
+﻿namespace GameSotre.Api.Dtos.Game;
 
 public record GameDetailsDto(
 	int Id,

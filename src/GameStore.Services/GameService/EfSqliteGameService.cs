@@ -18,28 +18,28 @@ public class EfSqliteGameService : IGameService
 	/// <summary>
 	/// Get all entities AsNoTracking.
 	/// </summary>
-	public List<Game> Getall()
+	public async Task<List<Game>> GetallAsync()
 	{
-		var games = _dbContext.Games
+		var games = await _dbContext.Games
 			.Include(g => g.Genre)
 			.AsNoTracking()
-			.ToList();
+			.ToListAsync();
 
 		return games;
 	}
 
-	public Game? GetById(int id)
+	public async Task<Game?> GetByIdAsync(int id)
 	{
-		var game = _dbContext.Games
+		var game = await _dbContext.Games
 			.Include(game => game.Genre)
-			.SingleOrDefault(game => game.Id == id);
+			.SingleOrDefaultAsync(game => game.Id == id);
 
 		return game;
 	}
 
-	public void Upsert(Game game)
+	public async Task UpsertAsync(Game game)
 	{
-		var existingGame = _dbContext.Games.Find(game.Id);
+		var existingGame = await _dbContext.Games.FindAsync(game.Id);
 		if (null == existingGame)
 		{
 			_dbContext.Games.Add(game);
@@ -54,26 +54,22 @@ public class EfSqliteGameService : IGameService
 				.SetValues(game);
 		}
 
-		_dbContext.SaveChanges();
+		await _dbContext.SaveChangesAsync();
 	}
 
-	public bool Delete(int id)
+	public async Task<bool> DeleteAsync(int id)
 	{
-		var deleteCount = _dbContext.Games
-				.Where(game => game.Id == id)
-				.ExecuteDelete();
-
-		_dbContext.SaveChanges();
+		var deleteCount = await _dbContext.Games
+			.Where(game => game.Id == id)
+			.ExecuteDeleteAsync();
 
 		return deleteCount == 0 ? false : true;
 	}
 
-	public void DelteMany(List<int> ids)
+	public async Task DelteManyAsync(List<int> ids)
 	{
-		_dbContext.Games
+		await _dbContext.Games
 			.Where(game => ids.Contains(game.Id))
-			.ExecuteDelete();
-
-		_dbContext.SaveChanges();
+			.ExecuteDeleteAsync();
 	}
 }

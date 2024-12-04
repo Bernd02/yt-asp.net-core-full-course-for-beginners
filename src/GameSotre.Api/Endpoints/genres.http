@@ -1,0 +1,37 @@
+
+GET http://localhost:5012/genres
+Accept: application/json
+
+
+###
+GET http://localhost:5012/genres/1
+Accept: application/json
+
+
+###
+POST http://localhost:5012/genres
+Content-Type: application/json
+
+{
+  "name": "Strategy"
+}
+
+
+###
+PUT http://localhost:5012/genres/2
+Content-Type: application/json
+
+{
+  "name": "Role playing - 2"
+}
+
+
+###
+DELETE http://localhost:5012/genres/6
+Accept: application/json
+
+
+###
+DELETE http://localhost:5012/genres?ids=6,7,8,9
+Accept: application/json
+
